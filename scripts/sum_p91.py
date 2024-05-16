@@ -8,8 +8,8 @@
 # Libraries
 import math
 import sys; sys.path += [".."]
-from ebsd_analyser.helper import csv_to_dict, dict_to_csv, round_sf, read_excel, get_sorted
-from ebsd_analyser.orientations import deg_to_rad
+from crystalyser.helper import csv_to_dict, dict_to_csv, round_sf, read_excel, get_sorted
+from crystalyser.orientations import deg_to_rad
 
 # Index to control which data to access
 SAMPLE_INDEX = int(sys.argv[1])

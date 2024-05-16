@@ -9,7 +9,7 @@
 
 # Libraries
 import math
-from ebsd_analyser.orientations import deg_to_rad, euler_to_matrix
+from crystalyser.orientations import deg_to_rad, euler_to_matrix
 from scipy.optimize import minimize
 
 def get_cubic_symmetry_matrices():

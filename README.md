@@ -1,3 +1,3 @@
-# EBSD Analyser
+# Crystal Analyser
 
-A compilation of unorganised scripts for analysing EBSD data
+A compilation of unorganised scripts for analysing crystallographic data

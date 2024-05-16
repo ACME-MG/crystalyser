@@ -8,8 +8,8 @@
 # Libraries
 import numpy as np
 from PIL import Image
-from ebsd_analyser.ebsd.ipf_cubic import euler_to_rgb
-from ebsd_analyser.ebsd.gridder import VOID_PIXEL_ID, UNORIENTED_PIXEL_ID, NO_ORIENTATION
+from crystalyser.ebsd.ipf_cubic import euler_to_rgb
+from crystalyser.ebsd.gridder import VOID_PIXEL_ID, UNORIENTED_PIXEL_ID, NO_ORIENTATION
 
 # Colours
 MASK_COLOUR       = (0,0,0) # black
