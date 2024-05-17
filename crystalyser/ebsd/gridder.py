@@ -49,6 +49,29 @@ def get_neighbours(x:float, y:float, x_size:int, y_size:int) -> list:
     ]
     return neighbours
 
+def get_common_neighbours(pixel_grid:list, x:float, y:float, x_size:int, y_size:int) -> list:
+    """
+    Gets the neighbouring indices of a pixel that have the
+    same values in the pixel grid
+    
+    Parameters:
+    * `pixel_grid`: A list of pixels
+    * `x`:          The x coordinate
+    * `y`:          The y coordinate
+    * `x_size`:     The maximum x value 
+    * `y_size`:     The maximum y value
+    
+    Returns a list of the common neighbouring coordinates 
+    """
+    current_value = pixel_grid[y][x]
+    neighbours = get_neighbours(x, y, x_size, y_size)
+    common_neighbours = []
+    for neighbour in neighbours:
+        neighbour_value = pixel_grid[neighbour[1]][neighbour[0]]
+        if neighbour_value == current_value:
+            common_neighbours.append(neighbour)
+    return common_neighbours
+
 def get_all_neighbours(x_list:list, y_list:list, x_size:int, y_size:int):
     """
     Gets the neighbouring indices of a group of pixels
