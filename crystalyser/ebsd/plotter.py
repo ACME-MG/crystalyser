@@ -14,31 +14,43 @@ from crystalyser.ebsd.ipf_cubic import euler_to_rgb
 # EBSD Plotter class
 class EBSDPlotter:
     
-    def __init__(self, pixel_grid:list, grain_map:dict, scaler:float):
+    def __init__(self, pixel_grid:list, grain_map:dict, step_size:float, scale:float=10):
         """
         Constructor for the plotter class
         
         Parameters:
         * `pixel_grid`: A grid of pixels
         * `grain_map`:  A mapping of the grains to the average orientations
-        * `scaler`:     The step size of the EBSD map
+        * `step_size`:  The step size of the EBSD map
+        * `scale`:      Scale for the horizontal axis of the figure (in inches)
         """
         
         # Initialise internal variables
         self.pixel_grid = pixel_grid
         self.grain_map = grain_map
-        self.scaler = scaler
+        self.step_size = step_size
+        self.scale = scale
         
-        # Calculate pixel size
-        disp_p1 = plt.gca().transData.transform((0, 0))
-        disp_p2 = plt.gca().transData.transform((self.scaler, 0))
-        self.pixel_size = self.scaler*3/2
-        self.square_size = np.linalg.norm(disp_p1 - disp_p2)*self.pixel_size
+        # Initialise plot
+        x_max = len(pixel_grid[0])*self.step_size
+        y_max = len(pixel_grid)*self.step_size
+        self.figure, self.axis = plt.subplots(figsize=(scale, y_max/x_max*scale))
+        plt.xlim(0, x_max)
+        plt.ylim(0, y_max)
         
-        # Initialise the plot
-        x_length = len(pixel_grid[0])*scaler
-        y_length = len(pixel_grid)*scaler
-        plt.figure(figsize=(x_length, y_length))
+        # Define size of each square marker (55 magical number)
+        self.square_size = 55*self.scale*self.step_size/x_max
+
+    def get_coordinate(self, index:int) -> float:
+        """
+        Converts an index into a coordinate value
+
+        Parameters:
+        * `index`: The index
+
+        Returns the coordinate value
+        """
+        return index*self.step_size + self.step_size/2
 
     def plot_ebsd(self, ipf:str="x") -> None:
         """
@@ -47,7 +59,7 @@ class EBSDPlotter:
         Parameters:
         * `pixel_grid`: A grid of pixels
         * `grain_map`:  A mapping of the grains to the average orientations
-        * `scaler`:     The step size of the EBSD map
+        * `step_size`:     The step size of the EBSD map
         * `ipf`:        The IPF direction
         """
         
@@ -62,35 +74,37 @@ class EBSDPlotter:
         x_list, y_list, colour_list = [], [], []
         for row in range(len(self.pixel_grid)):
             for col in range(len(self.pixel_grid[row])):
-                x_list.append(col*self.scaler)
-                y_list.append(row*self.scaler)
+                x_list.append(self.get_coordinate(col))
+                y_list.append(self.get_coordinate(row))
                 colour_list.append(colour_map[self.pixel_grid[row][col]])
 
-        # Plot and format
+        # Plot
         plt.scatter(x_list, y_list, c=colour_list, s=self.square_size**2, marker="s")
-        plt.xlim(min(x_list)-self.pixel_size/2, max(x_list)+self.pixel_size/2)
-        plt.ylim(min(y_list)-self.pixel_size/2, max(y_list)+self.pixel_size/2)
 
-    def plot_centroids(self, colour:str="black") -> None:
+    def plot_centroids(self, id_list:list=None, colour:str="black") -> None:
         """
         Writes the grain IDs at the centroids
         
         Parameters:
-        * `colour`: The colour of the text
+        * `id_list`: List of grain IDs to add centroids to
+        * `colour`:  The colour of the text
         """
         centroid_dict = get_centroids(self.pixel_grid)
         for grain_id in centroid_dict.keys():
+            if id_list != None and not grain_id in id_list:
+                continue
             x, y = centroid_dict[grain_id]
-            x *= self.scaler
-            y *= self.scaler
+            x = self.get_coordinate(x)
+            y = self.get_coordinate(y)
             plt.text(x, y, str(grain_id), fontsize=12, ha="center", va="center", color=colour)
 
-    def plot_boundaries(self, colour:str="red") -> None:
+    def plot_boundaries(self, id_list:list=None, colour:str="black") -> None:
         """
         Plots the grain boundaries
         
         Parameters:
-        * `colour`: The colour of the grain boundaries
+        * `id_list`: List of grain IDs to draw boundaries around
+        * `colour`:  The colour of the grain boundaries
         """
         
         # Initialise
@@ -102,18 +116,36 @@ class EBSDPlotter:
         for row in range(y_size):
             for col in range(x_size):
                 
+                # Only draw boundaries around specified grains (if specified)
+                if id_list != None and not self.pixel_grid[row][col] in id_list:
+                    continue
+                
+                # Get coordinates for pixel
+                x = self.get_coordinate(col)
+                y = self.get_coordinate(row)
+                
                 # Check to add boundary on the right
                 if col+1 < x_size and self.pixel_grid[row][col] != self.pixel_grid[row][col+1]:
-                    
-                
-                
-        #         neighbours = get_common_neighbours(self.pixel_grid, col, row, x_size, y_size)
-        #         if len(neighbours) < 4:
-        #             x_list.append(col*self.scaler)
-        #             y_list.append(row*self.scaler)
+                    x_list += [x + self.step_size/2]*2 + [np.NaN]
+                    y_list += [y - self.step_size/2, y + self.step_size/2] + [np.NaN]
 
-        # # Plot the grain boundaries
-        # plt.scatter(x_list, y_list, color=colour, s=self.square_size**2, marker="s")
+                # Check to add boundary on the left
+                if col-1 >= 0 and self.pixel_grid[row][col] != self.pixel_grid[row][col-1]:
+                    x_list += [x - self.step_size/2]*2 + [np.NaN]
+                    y_list += [y - self.step_size/2, y + self.step_size/2] + [np.NaN]
+
+                # Check to add boundary on the top
+                if row+1 < y_size and self.pixel_grid[row][col] != self.pixel_grid[row+1][col]:
+                    x_list += [x - self.step_size/2, x + self.step_size/2] + [np.NaN]
+                    y_list += [y + self.step_size/2]*2 + [np.NaN]
+
+                # Check to add boundary on the bottom
+                if row-1 >= 0 and self.pixel_grid[row][col] != self.pixel_grid[row-1][col]:
+                    x_list += [x - self.step_size/2, x + self.step_size/2] + [np.NaN]
+                    y_list += [y - self.step_size/2]*2 + [np.NaN]
+
+        # Plot the grain boundaries
+        plt.plot(x_list, y_list, color=colour)
 
 def save_plot(file_path:str) -> None:
     """
