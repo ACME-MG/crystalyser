@@ -19,12 +19,23 @@ class Grain:
         * `size`:     The number of pixels in the grain
         * `phase_id`: The phase ID of the grain
         """
-        self.phi_1    = phi_1
-        self.Phi      = Phi
-        self.phi_2    = phi_2
+        self.set_orientation(phi_1, Phi, phi_2)
         self.size     = size
         self.phase_id = phase_id
     
+    def set_orientation(self, phi_1:float, Phi:float, phi_2:float) -> None:
+        """
+        Sets the orientations
+        
+        Parameters:
+        * `phi_1`: The average phi_1 orientation of the grain
+        * `Phi`:   The average Phi orientation of the grain
+        * `phi_2`: The average phi_2 orientation of the grain
+        """
+        self.phi_1 = phi_1
+        self.Phi   = Phi
+        self.phi_2 = phi_2
+
     def get_orientation(self) -> tuple:
         """
         Returns the orientation of the grain
@@ -48,9 +59,3 @@ class Grain:
         Returns the phase id
         """
         return self.phase_id
-
-    def get_all_stats(self) -> list:
-        """
-        Returns a listed summary of the statistics
-        """
-        return [self.phi_1, self.Phi, self.phi_2, self.size, self.phase_id]

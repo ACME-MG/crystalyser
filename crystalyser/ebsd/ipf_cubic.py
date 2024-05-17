@@ -9,7 +9,7 @@
 
 # Libraries
 import math
-from crystalyser.orientations import deg_to_rad, euler_to_matrix
+from crystalyser.orientation import deg_to_rad, euler_to_matrix
 from scipy.optimize import minimize
 
 def get_cubic_symmetry_matrices():
@@ -80,7 +80,7 @@ def euler_to_rgb(phi_1:float, Phi:float, phi_2:float, ipf="x") -> tuple:
         return 255, 255, 255
     
     # Get matrices
-    orientation_matrix = euler_to_matrix(phi_1, Phi, phi_2)
+    orientation_matrix = euler_to_matrix([phi_1, Phi, phi_2])
     symmetry_matrices = get_cubic_symmetry_matrices()
 
     # Sort euler angles into SST

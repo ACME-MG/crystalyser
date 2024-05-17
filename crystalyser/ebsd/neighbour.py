@@ -1,33 +1,45 @@
 """
- Title:         Gridder
- Description:   Converting CSV files of EBSD data into manipulatable formats
+ Title:         Neighbour
+ Description:   For determining neighbours of grains
  Author:        Janzen Choi
 
 """
 
-# Special element IDs
-VOID_PIXEL_ID       = 100000 # large number
-UNORIENTED_PIXEL_ID = 100001 # large number + 1
-NO_ORIENTATION      = [0, 0, 0] # for both void and unoriented
+def get_neighbour_dict(pixel_grid:list) -> dict:
+    """
+    Gets neighbouring grain information;
+    does not repeat (if a->b then b-/>a)
 
-def get_void_pixel_grid(x_cells:list, y_cells:list) -> list:
-    """
-    Creates a grid of void pixels
-    
     Parameters:
-    * `x_cells`:    The number of pixels on the horizontal axis
-    * `y_cells`:    The number of pixels on the vertical axis
-    * `init_value`: The initial value of the cell in the piel grid
-    
-    Returns a grid of void pixels
+    * `pixel_grid`: A grid of pixels
+
+    Returns the dictionary of grain neighbours
     """
-    pixel_grid = []
-    for _ in range(y_cells):
-        pixel_list = []
-        for _ in range(x_cells):
-            pixel_list.append(VOID_PIXEL_ID)
-        pixel_grid.append(pixel_list)
-    return pixel_grid
+
+    # Initialise
+    x_size = len(pixel_grid[0])
+    y_size = len(pixel_grid)
+    neighbour_dict = {}
+
+    # Iterate through grid of pixels
+    for row in range(y_size):
+        for col in range(x_size):
+
+            # Initialise grain information if uninitialised
+            grain_id = pixel_grid[row][col]
+            if not grain_id in neighbour_dict.keys():
+                neighbour_dict[grain_id] = []
+
+            # Identify neighbouring grains
+            neighbours = get_neighbours(col, row, x_size, y_size)
+            for n in neighbours:
+                n_id = pixel_grid[n[1]][n[0]]
+                if (grain_id != n_id and not n_id in neighbour_dict[grain_id] and
+                    (not n_id in neighbour_dict.keys() or not grain_id in neighbour_dict[n_id])):
+                    neighbour_dict[grain_id].append(n_id)
+    
+    # Return dictionary
+    return neighbour_dict
 
 def get_neighbours(x:float, y:float, x_size:int, y_size:int) -> list:
     """

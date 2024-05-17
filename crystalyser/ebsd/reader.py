@@ -7,8 +7,31 @@
 
 # Libraries
 import numpy as np
-from crystalyser.ebsd.gridder import VOID_PIXEL_ID, UNORIENTED_PIXEL_ID, get_void_pixel_grid
 from crystalyser.ebsd.grain import Grain
+
+# Special element IDs
+VOID_PIXEL_ID       = 100000 # large number
+UNORIENTED_PIXEL_ID = 100001 # large number + 1
+NO_ORIENTATION      = [0, 0, 0] # for both void and unoriented
+
+def get_void_pixel_grid(x_cells:list, y_cells:list) -> list:
+    """
+    Creates a grid of void pixels
+    
+    Parameters:
+    * `x_cells`:    The number of pixels on the horizontal axis
+    * `y_cells`:    The number of pixels on the vertical axis
+    * `init_value`: The initial value of the cell in the piel grid
+    
+    Returns a grid of void pixels
+    """
+    pixel_grid = []
+    for _ in range(y_cells):
+        pixel_list = []
+        for _ in range(x_cells):
+            pixel_list.append(VOID_PIXEL_ID)
+        pixel_grid.append(pixel_list)
+    return pixel_grid
 
 def get_info(value_list:list, step_size:float) -> tuple:
     """

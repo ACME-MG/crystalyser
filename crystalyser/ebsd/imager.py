@@ -9,7 +9,7 @@
 import numpy as np
 from PIL import Image
 from crystalyser.ebsd.ipf_cubic import euler_to_rgb
-from crystalyser.ebsd.gridder import VOID_PIXEL_ID, UNORIENTED_PIXEL_ID, NO_ORIENTATION
+from crystalyser.ebsd.reader import VOID_PIXEL_ID, UNORIENTED_PIXEL_ID, NO_ORIENTATION
 
 # Colours
 MASK_COLOUR       = (0,0,0) # black
