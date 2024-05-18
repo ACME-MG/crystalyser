@@ -10,6 +10,7 @@ import sys; sys.path += [".."]
 from crystalyser.ebsd.reader import read_pixels
 from crystalyser.ebsd.plotter import EBSDPlotter, save_plot
 from crystalyser.ebsd.changer import deform_x, deform_y, orient_noise, merge_grains
+from crystalyser.ebsd.mapper import map_ebsd
 
 # EBSD data paths
 EBSD_DIR = "/mnt/c/Users/Janzen/OneDrive - UNSW/PhD/data/20240516 (ondrej_P91)"
@@ -47,3 +48,5 @@ grain_map_1 = orient_noise(grain_map_0)
 pixel_grid_1, grain_map_1 = merge_grains(pixel_grid_1, grain_map_1)
 plot(pixel_grid_1, grain_map_1, "ebsd_1")
 
+# Print mapping
+map_ebsd(pixel_grid_0, pixel_grid_1)

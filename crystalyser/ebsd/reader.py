@@ -7,6 +7,7 @@
 
 # Libraries
 import numpy as np
+from copy import deepcopy
 from crystalyser.ebsd.grain import Grain
 
 # Special element IDs
