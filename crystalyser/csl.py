@@ -187,8 +187,8 @@ def get_disorientation(euler_1:list, euler_2:list, type:str) -> float:
     Determines the minimal misorientation of two sets of euler angles (rads)
 
     Parameters:
-    * `euler_1`: The first euler angle
-    * `euler_2`: The second euler angle
+    * `euler_1`: The first euler angle (rads)
+    * `euler_2`: The second euler angle (rads)
     * `type`:    The crystal structure type
     
     Returns the disorientation angle

@@ -57,9 +57,9 @@ GRAIN_MAP = [GRAIN_MAP_0, GRAIN_MAP_1, GRAIN_MAP_2][SAMPLE_INDEX]
 
 # Output Parameters
 OUTPUT_FOLDER  = "results"
-OUTPUT_MAPPING = f"{OUTPUT_FOLDER}/mapping_p91"
-OUTPUT_TENSILE = f"{OUTPUT_FOLDER}/tensile_p91"
-OUTPUT_GRAINS  = f"{OUTPUT_FOLDER}/grain_p91"
+OUTPUT_MAPPING = f"{OUTPUT_FOLDER}/p91_s{SAMPLE_INDEX+1}_map"
+OUTPUT_TENSILE = f"{OUTPUT_FOLDER}/p91_s{SAMPLE_INDEX+1}_exp"
+OUTPUT_GRAINS  = f"{OUTPUT_FOLDER}/p91_s{SAMPLE_INDEX+1}_grains"
 
 # Other Constants
 YOUNGS   = 190000 # MPa
@@ -134,7 +134,7 @@ for i, start_index in enumerate(start_indexes):
     mapping_dict["start"].append(start_index+1)
     mapping_dict["end"].append(GRAIN_MAP[start_index+1])
     mapping_dict["weight"].append(sorted_weights[i])
-dict_to_csv(mapping_dict, f"{OUTPUT_MAPPING}_{SAMPLE_INDEX}.csv")
+dict_to_csv(mapping_dict, f"{OUTPUT_MAPPING}.csv")
 
 # Get grain trajectories of grains we can map
 for i, start_index in enumerate(start_indexes):
@@ -160,7 +160,7 @@ tensile_field_dict = {
 
 # Package and save tensile data
 tensile_dict = {**tensile_curve_dict, **tensile_grain_dict, **tensile_field_dict}
-dict_to_csv(tensile_dict, f"{OUTPUT_TENSILE}_{SAMPLE_INDEX}.csv")
+dict_to_csv(tensile_dict, f"{OUTPUT_TENSILE}.csv")
 
 # Package and save grain data
 grain_dict = {
@@ -169,4 +169,4 @@ grain_dict = {
     "phi_2": deg_to_rad(grain_start_phi_2),
     "weight": grain_start_weight
 }
-dict_to_csv(grain_dict, f"{OUTPUT_GRAINS}_{SAMPLE_INDEX}.csv", False)
+dict_to_csv(grain_dict, f"{OUTPUT_GRAINS}.csv", False)
