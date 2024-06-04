@@ -123,25 +123,13 @@ grain_end_Phi    = grain_end_dict[GRAIN_PHI]
 grain_end_phi_2  = grain_end_dict[GRAIN_PHI_2]
 grain_end_weight = grain_end_dict[GRAIN_WEIGHT]
 
-# Order grains by weight and mappability
-sorted_weights, sorted_indexes = get_sorted(grain_start_weight)
-start_indexes = [i for i in sorted_indexes if i+1 in GRAIN_MAP.keys()]
-tensile_grain_dict = {}
-
-# Create CSV for grain mapping
-mapping_dict = {"start": [], "end": [], "weight": []}
-for i, start_index in enumerate(start_indexes):
-    mapping_dict["start"].append(start_index+1)
-    mapping_dict["end"].append(GRAIN_MAP[start_index+1])
-    mapping_dict["weight"].append(sorted_weights[i])
-dict_to_csv(mapping_dict, f"{OUTPUT_MAPPING}.csv")
-
 # Get grain trajectories of grains we can map
-for i, start_index in enumerate(start_indexes):
-    end_index = GRAIN_MAP[start_index+1]-1
-    tensile_grain_dict[f"g{i}_phi_1"] = get_trajectory(strain_list, grain_start_phi_1[start_index], grain_end_phi_1[end_index])
-    tensile_grain_dict[f"g{i}_Phi"]   = get_trajectory(strain_list, grain_start_Phi[start_index],   grain_end_Phi[end_index])
-    tensile_grain_dict[f"g{i}_phi_2"] = get_trajectory(strain_list, grain_start_phi_2[start_index], grain_end_phi_2[end_index])
+tensile_grain_dict = {}
+for start_index in GRAIN_MAP.keys():
+    end_index = GRAIN_MAP[start_index]
+    tensile_grain_dict[f"g{start_index}_phi_1"] = get_trajectory(strain_list, grain_start_phi_1[start_index-1], grain_end_phi_1[end_index-1])
+    tensile_grain_dict[f"g{start_index}_Phi"]   = get_trajectory(strain_list, grain_start_Phi[start_index-1],   grain_end_Phi[end_index-1])
+    tensile_grain_dict[f"g{start_index}_phi_2"] = get_trajectory(strain_list, grain_start_phi_2[start_index-1], grain_end_phi_2[end_index-1])
 
 # Create dictionaries for tensile data
 tensile_curve_dict = {
