@@ -9,7 +9,7 @@
 import sys; sys.path += [".."]
 import numpy as np
 import matplotlib.pyplot as plt
-from crystalyser.helper import csv_to_dict, dict_to_csv, round_sf
+from crystalyser.helper import csv_to_dict, dict_to_csv, round_sf, quick_spline
 from crystalyser.interpolator import Interpolator
 
 # Paths
@@ -21,14 +21,6 @@ EXPERIMENTAL_PATH  = "./results/617_s1_exp.csv"
 TIME_FIELD   = "time"   # s
 STRESS_FIELD = "stress" # MPa
 STRAIN_FIELD = "strain" # mm/mm
-
-# Field values
-TEMPERATURE = 20        # C
-STRAIN_RATE = 1e-4      # /s
-YOUNGS      = 211000    # MPa
-POISSONS    = 0.30
-TYPE        = "tensile"
-TITLE       = "617_s1"
 
 # Other constants
 NUM_POINTS = 100
@@ -89,12 +81,12 @@ tc_dict = {
 
 # Create dictionary of other information
 other_dict = {
-    "temperature": TEMPERATURE,
-    "strain_rate": STRAIN_RATE,
-    "youngs":      YOUNGS,
-    "poissons":    POISSONS,
-    "type":        TYPE,
-    "title":       TITLE,
+    "temperature": 20,     # C
+    "strain_rate": 1e-4,   # /s
+    "youngs":      211000, # MPa
+    "poissons":    0.30,
+    "type":        "tensile",
+    "title":       "617_s1",
 }
 
 # Combine dictionaries and save
@@ -110,5 +102,5 @@ legend = plt.legend(framealpha=1, edgecolor="black", fancybox=True, facecolor="w
 plt.gca().add_artist(legend)
 plt.xlim(0,1.20)
 plt.ylim(0,1200)
-plt.savefig(f"results/{TITLE}_tc.png")
+plt.savefig(f"results/617_s1_ss.png")
 

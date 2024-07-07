@@ -9,6 +9,45 @@
 import pandas as pd
 import math
 
+def get_closest(x_list:list, y_list:list, x_value:float) -> float:
+    """
+    Finds the closest corresponding y value given an x value;
+    does not interpolate
+
+    Parameters:
+    * `x_list`:  The list of x values
+    * `y_list`:  The list of y values
+    * `x_value`: The x value to get the closest value of
+    
+    Returns the closest value
+    """
+    x_diff_list = [abs(x-x_value) for x in x_list]
+    x_min_diff = min(x_diff_list)
+    x_min_index = x_diff_list.index(x_min_diff)
+    return y_list[x_min_index]
+
+def quick_spline(x_list:list, y_list:list, x_value:float) -> float:
+    """
+    Conducts a quick evaluation using spline interpolation without
+    conducting the whole interpolation; assumes that the x_value is
+    between min(x_list) and max(x_list) and that x_list is sorted
+
+    Parameters:
+    * `x_list`:  The list of x values
+    * `y_list`:  The list of y values
+    * `x_value`: The x value to evaluate
+    
+    Returns the evaluated y value
+    """
+    if len(x_list) != len(y_list):
+        raise ValueError("Length of lists do not match!")
+    for i in range(len(x_list)-1):
+        if x_list[i] <= x_value and x_value <= x_list[i+1]:
+            gradient = (y_list[i+1]-y_list[i])/(x_list[i+1]-x_list[i])
+            y_value = gradient*(x_value - x_list[i]) + y_list[i]
+            return y_value
+    return None
+
 def get_thinned_list(unthinned_list:list, density:int) -> list:
     """
     Gets a thinned list
@@ -126,9 +165,20 @@ def read_excel(excel_path:str, sheet:str, column:int) -> list:
     """
     data_frame = pd.read_excel(excel_path, sheet_name=sheet)
     data_list = list(data_frame.iloc[:,column])
-    data_list = list(filter(lambda x: not math.isnan(x), data_list))
-    data_list = [round_sf(data, 8) for data in data_list]
+    # data_list = list(filter(lambda x: not math.isnan(x), data_list))
+    # data_list = [round_sf(data, 8) for data in data_list]
     return data_list
+
+def remove_nan(data_list:list) -> list:
+    """
+    Removes nan values from a list of data values
+
+    Parameters:
+    * `data_list`: The list of data values
+
+    Returns the list of data values without nan values
+    """
+    return list(filter(lambda x: not math.isnan(x), data_list))
 
 def get_sorted(value_list:list, reverse:bool=True) -> tuple:
     """
