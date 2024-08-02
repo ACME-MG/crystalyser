@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from crystalyser.helper import read_excel, remove_nan, csv_to_dict, get_closest, dict_to_csv, get_thinned_list, round_sf
 
 # Input Paths
-SS_PATH = "/mnt/c/Users/Janzen/OneDrive - UNSW/PhD/data/2024-06-26 (ansto_617_s3)/sscurve_corrected_janzen_3.xlsx"
+SS_PATH = "/mnt/c/Users/z5208868/OneDrive - UNSW/PhD/data/2024-06-26 (ansto_617_s3)/sscurve_corrected_janzen_3.xlsx"
 PHI_PATH = "./data/617_s3_reorientation.csv"
 
 # Output Paths
@@ -41,6 +41,7 @@ stress_list = get_thinned_list(stress_list, THIN_AMOUNT)
 phi_dict = csv_to_dict(PHI_PATH)
 for phi in phi_dict.keys():
     phi_dict[phi] = [round_sf(np, 5) for np in phi_dict[phi]]
+    phi_dict[phi] = phi_dict[phi][1:]
 
 # Create new stress-strain dictionary
 new_ss_dict = {
