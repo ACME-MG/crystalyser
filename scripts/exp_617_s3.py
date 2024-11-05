@@ -11,9 +11,10 @@ import matplotlib.pyplot as plt
 from crystalyser.helper import read_excel, remove_nan, csv_to_dict, get_closest, dict_to_csv, get_thinned_list, round_sf
 
 # Input Paths
-SS_PATH  = "/mnt/c/Users/z5208868/OneDrive - UNSW/PhD/data/2024-06-26 (ansto_617_s3)/sscurve_corrected_janzen_3.xlsx"
-# PHI_PATH = "/mnt/c/Users/z5208868/OneDrive - UNSW/PhD/results/ebsd_mapper/240813093129_617_s3_mapping/reorientation.csv"
-PHI_PATH = "/mnt/c/Users/z5208868/OneDrive - UNSW/PhD/results/ebsd_mapper/240912165226_617_s3_10u/reorientation.csv"
+SS_PATH  = "/mnt/c/Users/janzen/OneDrive - UNSW/PhD/data/2024-06-26 (ansto_617_s3)/sscurve_corrected_janzen_3.xlsx"
+# PHI_PATH = "/mnt/c/Users/janzen/OneDrive - UNSW/PhD/results/ebsd_mapper/240813093129_617_s3_mapping/reorientation.csv"
+# PHI_PATH = "/mnt/c/Users/janzen/OneDrive - UNSW/PhD/results/ebsd_mapper/240912165226_617_s3_10u/reorientation.csv"
+PHI_PATH = "data/617_s3_20um_reorientation.csv"
 
 # Output Paths
 EXPERIMENTAL_PATH = "./results/617_s3_exp.csv"
